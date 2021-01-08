@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
         var spriteObject = new GameObject("Selection sprite");
         spriteObject.transform.SetParent(entity.transform);
         spriteObject.transform.localPosition = Vector3.zero;
-        
+
         var sprite = spriteObject.AddComponent<SpriteRenderer>();
         sprite.sprite = entitySelectedSprite;
         Bounds bounds = collider.bounds;
