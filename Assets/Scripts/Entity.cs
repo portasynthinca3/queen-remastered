@@ -5,9 +5,20 @@ using Mirror;
 
 public class Entity : NetworkBehaviour
 {
-    new public string name;
+    new public string name = "Entity";
     public string description;
-
-    public float health;
     public float maxHealth;
+    public float health;
+
+    public GameObject selectionSprite;
+
+    public void Select()
+    {
+        selectionSprite?.SetActive(true);
+    }
+
+    public void Deselect()
+    {
+        selectionSprite?.SetActive(false);
+    }
 }

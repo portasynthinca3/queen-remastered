@@ -18,12 +18,22 @@ public class EntitySelector : MonoBehaviour
         {
             Entity entity = RaycastForEntity();
             DeselectAll();
-            selectedEntities.Add(entity);
+
+            if(entity != null)
+            {
+                selectedEntities.Add(entity);
+                entity.Select();
+            }
         }
     }
 
     public void DeselectAll()
     {
+        foreach(var entity in selectedEntities)
+        {
+            entity.Deselect();
+        }
+
         selectedEntities.Clear();
     }
 
@@ -37,7 +47,7 @@ public class EntitySelector : MonoBehaviour
 
             if (entity != null) return entity;
         }
-        
+
         return null;
     }
 }

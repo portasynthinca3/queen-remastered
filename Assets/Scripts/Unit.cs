@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Unit : Entity
 {
-
+    public Team team;
 }
