@@ -9,16 +9,4 @@ public class Entity : NetworkBehaviour
     public string description;
     public float maxHealth;
     public float health;
-
-    public GameObject selectionSprite;
-
-    public void Select()
-    {
-        selectionSprite?.SetActive(true);
-    }
-
-    public void Deselect()
-    {
-        selectionSprite?.SetActive(false);
-    }
 }
