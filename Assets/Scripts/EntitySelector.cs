@@ -37,10 +37,15 @@ public class EntitySelector : MonoBehaviour
 
     private void StartSelectionBoxRoutine()
     {
-        if(selectionBoxRoutine != null)
-        StopCoroutine(selectionBoxRoutine);
+        if (selectionBoxRoutine != null)
+            StopCoroutine(selectionBoxRoutine);
         selectionBoxRoutine = SelectionBoxRoutine();
         StartCoroutine(selectionBoxRoutine);
+    }
+
+    private Vector2 Vector2Abs(Vector2 val)
+    {
+        return new Vector2(Mathf.Abs(val.x), Mathf.Abs(val.y));
     }
 
     private IEnumerator SelectionBoxRoutine()
@@ -49,22 +54,45 @@ public class EntitySelector : MonoBehaviour
         selectionBox.transform.position = firstPoint;
         selectionBox.gameObject.SetActive(true);
 
-        while(Input.GetMouseButton(0))
+        while (Input.GetMouseButton(0))
         {
-            Vector2 newSize = Input.mousePosition - firstPoint;
-            Vector2 newScale = new Vector2(Mathf.Clamp(newSize.x, -1f, 1f), Mathf.Clamp(newSize.y, -1f, 1f));
+            DeselectAll();
+
+            // Draw selection box.
+            var newSize = Input.mousePosition - firstPoint;
+            var newScale = new Vector2(Mathf.Clamp(newSize.x, -1f, 1f), Mathf.Clamp(newSize.y, -1f, 1f));
             newSize = new Vector2(Mathf.Abs(newSize.x), Mathf.Abs(newSize.y));
-            
+
             selectionBox.sizeDelta = newSize;
             selectionBox.localScale = newScale;
-                                             
+
+            // Look for units in the area.
+            var point2 = cam.ScreenToWorldPoint(Input.mousePosition);
+            var point1 = cam.ScreenToWorldPoint(firstPoint);
+            var selectionSize = Vector2Abs(point2 - point1);
+            var position = (point1 + point2) / 2;
+            
+            var colliders = Physics2D.OverlapBoxAll(position, selectionSize, 0f);
+            foreach (var collider in colliders)
+            {
+                var unit = collider.GetComponent<Unit>();
+
+                if (unit != null)
+                {
+                    SelectEntity(unit);
+                }
+            }
             yield return null;
         }
 
-        var colliders = new Collider2D[];
-        Physics2D.OverlapArea(firstPoint, Input.mousePosition, new ContactFilter2D(), colliders);
-
         selectionBox.gameObject.SetActive(false);
+    }
+
+    private void SelectEntity(Entity entity)
+    {
+        selectedEntities.Add(entity);
+
+        UIManager.Instance.CreateEntitySelectedSprite(entity);
     }
 
     private void TrySelectSingleEntity(Vector2 screenPosition)
@@ -74,9 +102,7 @@ public class EntitySelector : MonoBehaviour
 
         if (entity != null)
         {
-            selectedEntities.Add(entity);
-
-            UIManager.Instance.CreateEntitySelectedSprite(entity);
+            SelectEntity(entity);
         }
     }
 
@@ -93,4 +119,5 @@ public class EntitySelector : MonoBehaviour
 
         return null;
     }
+    
 }
