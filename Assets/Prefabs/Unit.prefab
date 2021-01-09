@@ -70,6 +70,7 @@ MonoBehaviour:
   description: 
   maxHealth: 0
   health: 0
+  movementSpeed: 1.08
 --- !u!114 &7773084571753267685
 MonoBehaviour:
   m_ObjectHideFlags: 0

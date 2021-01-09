@@ -6,11 +6,12 @@ using Pathfinding;
 [RequireComponent(typeof(Seeker))]
 public class Unit : Entity
 {
+    [Range(0.01f, 10f)]
     public float movementSpeed;
 
-    private Seeker seeker;
-    private Path currentPath;
-    private IEnumerator moveRoutine;
+    Seeker seeker;
+    Path currentPath;
+    IEnumerator moveRoutine;
 
     private void Awake()
     {
@@ -39,24 +40,21 @@ public class Unit : Entity
 
     private void StartMoveRoutine()
     {
-        if(moveRoutine != null)
-        StopCoroutine(moveRoutine);
-        moveRoutine = MoveRoutine();
-        StartCoroutine(MoveRoutine());
+        if(moveRoutine != null) StopCoroutine(moveRoutine);
+        StartCoroutine(moveRoutine = MoveRoutine());
     }
 
     private IEnumerator MoveRoutine()
     {
         while(currentPath.path.Count > 0)
         {
-            transform.position = Vector3.MoveTowards(transform.position, (Vector3)currentPath.path[0].position, 
-            movementSpeed * Time.deltaTime);
+            var node = currentPath.path[0];
+            transform.position = Vector3.MoveTowards(transform.position, (Vector3)node.position, 
+                movementSpeed * Time.deltaTime);
 
-            float distToNode = Vector2.Distance(transform.position, (Vector3)currentPath.path[0].position);
+            var distToNode = Vector3.Distance(transform.position, (Vector3)node.position);
             if(distToNode < 0.1f)
-            {
                 currentPath.path.RemoveAt(0);
-            }
 
             yield return null;
         }
