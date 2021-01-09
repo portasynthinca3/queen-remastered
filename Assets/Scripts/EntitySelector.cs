@@ -35,6 +35,11 @@ public class EntitySelector : MonoBehaviour
         return unitsSelected;
     }
 
+    public Entity[] GetSelectedEntities()
+    {
+        return selectedEntities.ToArray();
+    }
+
     public void DeselectAll()
     {
         foreach (var entity in selectedEntities)

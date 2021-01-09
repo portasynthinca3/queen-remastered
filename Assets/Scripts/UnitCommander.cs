@@ -14,8 +14,14 @@ public class UnitCommander : MonoBehaviour
     {
         if(!EntitySelector.Instance.UnitsSelected()) return;
 
-        Vector3 particlePosition = Camera.main.ScreenToWorldPoint(screenCoordinates);
-        particlePosition.z = 0f;
-        ParticleManager.Instance.CreateMoveUnitsParticle(particlePosition);
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenCoordinates);
+        ParticleManager.Instance.CreateMoveUnitsParticle(new Vector3(worldPosition.x, worldPosition.y, 0f));
+
+        foreach(var entity in EntitySelector.Instance.GetSelectedEntities())
+        {
+            var unit = (Unit)entity;
+            
+            unit.MoveTo(worldPosition);
+        }
     }
 }
