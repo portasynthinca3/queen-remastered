@@ -7,7 +7,7 @@ using Pathfinding;
 public class Unit : Entity
 {
     [Range(0.01f, 10f)]
-    public float movementSpeed;
+    public float movementSpeed = 1f;
 
     Seeker seeker;
     Path currentPath;
