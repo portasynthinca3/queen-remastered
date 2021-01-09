@@ -7,11 +7,15 @@ public class UnitCommander : MonoBehaviour
 
     private void Awake()
     {
-        clickReceiver.onClick.AddListener(MoveUnits);
+        clickReceiver.onRightClick.AddListener(MoveUnits);
     }
 
     private void MoveUnits(Vector2 screenCoordinates)
     {
-        Debug.Log("Move Units");
+        if(!EntitySelector.Instance.UnitsSelected()) return;
+
+        Vector3 particlePosition = Camera.main.ScreenToWorldPoint(screenCoordinates);
+        particlePosition.z = 0f;
+        ParticleManager.Instance.CreateMoveUnitsParticle(particlePosition);
     }
 }
